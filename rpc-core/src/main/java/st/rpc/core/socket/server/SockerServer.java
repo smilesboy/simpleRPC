@@ -1,24 +1,25 @@
-package st.rpc.core.server;
-
+package st.rpc.core.socket.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import st.rpc.core.RpcServer;
 import st.rpc.core.registry.ServiceRegistry;
+import st.rpc.core.RequestHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
+
 /**
- * 远程方法调用的服务端
+ * Socket方式远程方法调用的提供者（服务端）
  * @author sutian
- * @Date 2020/8/19
+ * @Date 2020/8/29
  */
+public class SockerServer implements RpcServer {
 
-public class RpcServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SockerServer.class);
 
     private static final int corePoolSize = 5;
     private static final int maximumPoolSize = 50;
@@ -28,13 +29,14 @@ public class RpcServer {
     private RequestHandler requestHandler = new RequestHandler();
     private final ServiceRegistry serviceRegistry;
 
-    public RpcServer(ServiceRegistry serviceRegistry) {
+    public SockerServer(ServiceRegistry serviceRegistry) {
         this.serviceRegistry = serviceRegistry;
         BlockingQueue<Runnable> workingQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         threadPool = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workingQueue, threadFactory);
     }
 
+    @Override
     public void start(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("服务器正在启动...");
