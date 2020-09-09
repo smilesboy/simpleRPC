@@ -1,24 +1,26 @@
 package st.rpc.core.registry;
 
+import java.net.InetSocketAddress;
+
 /**
- * 服务注册表通用接口
+ * 服务注册中心通用接口
  * @author sutian
- * @Date 2020/8/26
+ * @Date 2020/9/7
  */
 public interface ServiceRegistry {
 
     /**
      * 将一个服务注册进注册表
-     * @param service 要注册的服务实体
-     * @param <T> 服务实体类型
+     * @param serviceName 服务名称
+     * @param inetSocketAddress 服务实体类型
      */
-    <T> void register(T service);
+     void register(String serviceName, InetSocketAddress inetSocketAddress);
 
     /**
-     * 根据服务名称获取服务实体
-     * @param serviceName 服务名称
+     * 根据服务名称查找服务实体
+     * @param serviceName
      * @return 服务实体
      */
-    Object getService(String serviceName);
+    InetSocketAddress  lookupService(String serviceName);
 
 }

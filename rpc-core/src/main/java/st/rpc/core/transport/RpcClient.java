@@ -1,14 +1,17 @@
-package st.rpc.core;
+package st.rpc.core.transport;
 
 import st.rpc.common.entity.RpcRequest;
+import st.rpc.core.serializer.CommonSerializer;
 
 /**
  * 客户端类通用接口
  * @author sutian
- * @Date 2020/8/28
+ * @Date 2020/9/8
  */
 public interface RpcClient {
 
     Object sendRequest(RpcRequest rpcRequest);
+
+    void setSerializer(CommonSerializer serializer);
 
 }

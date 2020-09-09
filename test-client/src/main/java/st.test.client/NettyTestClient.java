@@ -3,9 +3,10 @@ package st.test.client;
 
 import st.rpc.api.HelloObject;
 import st.rpc.api.HelloService;
-import st.rpc.core.RpcClient;
-import st.rpc.core.RpcClientProxy;
-import st.rpc.core.netty.client.NettyClient;
+import st.rpc.core.serializer.ProtostuffSerializer;
+import st.rpc.core.transport.RpcClient;
+import st.rpc.core.transport.RpcClientProxy;
+import st.rpc.core.transport.netty.client.NettyClient;
 
 /**
  * 测试中的客户端
@@ -15,7 +16,8 @@ import st.rpc.core.netty.client.NettyClient;
 public class NettyTestClient {
 
     public static void main(String[] args) {
-        RpcClient client = new NettyClient("127.0.0.1", 9000);
+        RpcClient client = new NettyClient();
+        client.setSerializer(new ProtostuffSerializer());
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(13, "This is a message");

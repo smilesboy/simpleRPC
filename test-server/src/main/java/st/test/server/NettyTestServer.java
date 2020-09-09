@@ -1,10 +1,8 @@
 package st.test.server;
 
 import st.rpc.api.HelloService;
-import st.rpc.core.netty.server.NettyServer;
-import st.rpc.core.registry.DefaultServiceRegistry;
-import st.rpc.core.registry.ServiceRegistry;
-import st.rpc.core.RpcServer;
+import st.rpc.core.serializer.ProtostuffSerializer;
+import st.rpc.core.transport.netty.server.NettyServer;
 
 /**
  * 测试中的服务端（提供注册服务）
@@ -15,9 +13,9 @@ import st.rpc.core.RpcServer;
 public class NettyTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceRegistry serviceRegistry = new DefaultServiceRegistry();
-        serviceRegistry.register(helloService);
-        NettyServer rpcServer = new NettyServer();
-        rpcServer.start(9000);
+        NettyServer server = new NettyServer("127.0.0.1", 9999);
+        server.setSerializer(new ProtostuffSerializer());
+        server.publishService(helloService, HelloService.class);
+        server.start();
     }
 }
