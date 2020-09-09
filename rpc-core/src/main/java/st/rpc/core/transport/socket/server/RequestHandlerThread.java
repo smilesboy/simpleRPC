@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import st.rpc.common.entity.RpcRequest;
 import st.rpc.common.entity.RpcResponse;
 import st.rpc.core.handler.RequestHandler;
-import st.rpc.core.registry.ServiceRegistry;
 import st.rpc.core.serializer.CommonSerializer;
 import st.rpc.core.transport.socket.util.ObjectReader;
 import st.rpc.core.transport.socket.util.ObjectWriter;
@@ -28,13 +27,11 @@ public class RequestHandlerThread implements Runnable {
 
     private Socket socket;
     private RequestHandler requestHandler;
-    private ServiceRegistry serviceRegistry;
     private CommonSerializer serializer;
 
-    public RequestHandlerThread(Socket socket, RequestHandler requestHandler, ServiceRegistry serviceRegistry, CommonSerializer serializer) {
+    public RequestHandlerThread(Socket socket, RequestHandler requestHandler, CommonSerializer serializer) {
         this.socket = socket;
         this.requestHandler = requestHandler;
-        this.serviceRegistry = serviceRegistry;
         this.serializer = serializer;
     }
 

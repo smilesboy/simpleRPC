@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import st.rpc.common.entity.RpcRequest;
 import st.rpc.common.entity.RpcResponse;
-import st.rpc.common.util.ThreadPoolFactory;
+import st.rpc.common.factory.ThreadPoolFactory;
 import st.rpc.core.handler.RequestHandler;
 
 import java.util.concurrent.ExecutorService;
@@ -27,8 +27,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
     private static final String THREAD_NAME_PREFIX = "neety-server-handler";
     private static final ExecutorService threadPool;
     private static RequestHandler requestHandler;
-
-
 
     static {
         requestHandler = new RequestHandler();

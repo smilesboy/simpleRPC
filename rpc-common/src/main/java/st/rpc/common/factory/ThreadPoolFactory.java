@@ -1,4 +1,4 @@
-package st.rpc.common.util;
+package st.rpc.common.factory;
 
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;

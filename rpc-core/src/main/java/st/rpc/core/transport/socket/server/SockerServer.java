@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import st.rpc.common.enumeration.RpcError;
 import st.rpc.common.exception.RpcException;
-import st.rpc.common.util.ThreadPoolFactory;
+import st.rpc.common.factory.ThreadPoolFactory;
 import st.rpc.core.handler.RequestHandler;
 import st.rpc.core.provider.ServiceProvider;
 import st.rpc.core.provider.ServiceProviderImpl;
@@ -47,12 +47,12 @@ public class SockerServer implements RpcServer {
     }
 
     @Override
-    public <T> void publishService(Object service, Class<T> serviceClass) {
+    public <T> void publishService(T service, Class<T> serviceClass) {
         if(serializer == null) {
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
         }
-        serviceProvider.addServiceProvider(service);
+        serviceProvider.addServiceProvider(service, serviceClass);
         serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
         start();
     }
@@ -64,7 +64,7 @@ public class SockerServer implements RpcServer {
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
                 logger.info("消费者连接: {}:{}", socket.getInetAddress(), socket.getPort());
-                threadPool.execute(new RequestHandlerThread(socket, requestHandler, serviceRegistry, serializer));
+                threadPool.execute(new RequestHandlerThread(socket, requestHandler,  serializer));
             }
             threadPool.shutdown();
         } catch (IOException e) {

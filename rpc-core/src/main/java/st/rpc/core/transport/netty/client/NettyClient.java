@@ -14,8 +14,8 @@ import st.rpc.common.entity.RpcResponse;
 import st.rpc.common.enumeration.RpcError;
 import st.rpc.common.exception.RpcException;
 import st.rpc.common.util.RpcMessageChecker;
-import st.rpc.core.registry.NacosServiceRegistry;
-import st.rpc.core.registry.ServiceRegistry;
+import st.rpc.core.registry.NacosServiceDiscovery;
+import st.rpc.core.registry.ServiceDiscovery;
 import st.rpc.core.serializer.CommonSerializer;
 import st.rpc.core.transport.RpcClient;
 
@@ -27,12 +27,12 @@ public class NettyClient implements RpcClient {
     private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
 
     private static final Bootstrap bootsrap;
-    private final ServiceRegistry serviceRegistry;
 
+    private ServiceDiscovery serviceDiscovery;
     private CommonSerializer serializer;
 
     public NettyClient() {
-        this.serviceRegistry = new NacosServiceRegistry();
+        this.serviceDiscovery = new NacosServiceDiscovery();
     }
 
     static {
@@ -51,7 +51,7 @@ public class NettyClient implements RpcClient {
         }
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
-            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             Channel channel = ChannelProvider.get(inetSocketAddress, serializer);
             if (channel.isActive()) {
                 channel.writeAndFlush(rpcRequest).addListener(future1 -> {
