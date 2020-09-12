@@ -8,7 +8,9 @@ import st.rpc.common.factory.ThreadPoolFactory;
 import java.util.concurrent.ExecutorService;
 
 /**
- *
+ * 钩子函数，用于注销所有服务
+ * @author sutian
+ * @Date 2020/9/9
  */
 public class ShutdownHook {
 

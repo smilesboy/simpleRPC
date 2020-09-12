@@ -32,7 +32,7 @@ public class ChannelProvider {
     private static final int MAX_RETRY_COUNT = 5;
     private static Channel channel = null;
 
-    public static Channel get(InetSocketAddress inetSocketAddress, CommonSerializer serializer) {
+    public static Channel get(InetSocketAddress inetSocketAddress, CommonSerializer serializer) throws InterruptedException {
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {

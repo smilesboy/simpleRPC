@@ -8,6 +8,8 @@ import st.rpc.common.enumeration.ResponseCode;
 import st.rpc.common.enumeration.RpcError;
 import st.rpc.common.exception.RpcException;
 import st.rpc.common.util.RpcMessageChecker;
+import st.rpc.core.loadbalancer.LoadBalancer;
+import st.rpc.core.loadbalancer.RandomLoadBalancer;
 import st.rpc.core.registry.NacosServiceDiscovery;
 import st.rpc.core.registry.ServiceDiscovery;
 import st.rpc.core.serializer.CommonSerializer;
@@ -36,7 +38,18 @@ public class SocketClient implements RpcClient {
     private CommonSerializer serializer;
 
     public SocketClient() {
-        this.serviceDiscovery = new NacosServiceDiscovery();
+        this(DEFAULT_SERIALIZER, new RandomLoadBalancer());
+    }
+    public SocketClient(LoadBalancer loadBalancer) {
+        this(DEFAULT_SERIALIZER, loadBalancer);
+    }
+    public SocketClient(Integer serializer) {
+        this(serializer, new RandomLoadBalancer());
+    }
+
+    public SocketClient(Integer serializer, LoadBalancer loadBalancer) {
+        this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
+        this.serializer = CommonSerializer.getByCode(serializer);
     }
 
     @Override
@@ -69,8 +82,4 @@ public class SocketClient implements RpcClient {
         }
     }
 
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
-    }
 }
