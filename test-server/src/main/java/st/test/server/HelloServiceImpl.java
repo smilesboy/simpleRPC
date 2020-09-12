@@ -4,12 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import st.rpc.api.HelloObject;
 import st.rpc.api.HelloService;
+import st.rpc.core.annotation.Service;
 
 /**
  * @author sutian
  * @Date 2020/8/19
  */
-
+@Service
 public class HelloServiceImpl implements HelloService {
 
     private  static final Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);

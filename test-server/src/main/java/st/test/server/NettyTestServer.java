@@ -1,7 +1,7 @@
 package st.test.server;
 
-import st.rpc.api.HelloService;
-import st.rpc.core.serializer.ProtostuffSerializer;
+import st.rpc.core.annotation.ServiceScan;
+import st.rpc.core.serializer.CommonSerializer;
 import st.rpc.core.transport.netty.server.NettyServer;
 
 /**
@@ -9,13 +9,10 @@ import st.rpc.core.transport.netty.server.NettyServer;
  * @author sutian
  * @Date 2020/9/5
  */
-
+@ServiceScan
 public class NettyTestServer {
     public static void main(String[] args) {
-        HelloService helloService = new HelloServiceImpl();
-        NettyServer server = new NettyServer("127.0.0.1", 9999);
-        server.setSerializer(new ProtostuffSerializer());
-        server.publishService(helloService, HelloService.class);
+        NettyServer server = new NettyServer("127.0.0.1", 9999, CommonSerializer.DEFAULT_SERIALIZER);
         server.start();
     }
 }

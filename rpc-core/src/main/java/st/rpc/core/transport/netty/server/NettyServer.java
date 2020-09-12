@@ -7,20 +7,15 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import st.rpc.common.enumeration.RpcError;
-import st.rpc.common.exception.RpcException;
 import st.rpc.core.codec.CommonDecoder;
 import st.rpc.core.codec.CommonEncoder;
-import st.rpc.core.provider.ServiceProvider;
+import st.rpc.core.hook.ShutdownHook;
 import st.rpc.core.provider.ServiceProviderImpl;
 import st.rpc.core.registry.NacosServiceRegistry;
-import st.rpc.core.registry.ServiceRegistry;
 import st.rpc.core.serializer.CommonSerializer;
-import st.rpc.core.transport.RpcServer;
+import st.rpc.core.transport.AbstractRpcServer;
 
-import java.net.InetSocketAddress;
+import static st.rpc.core.serializer.CommonSerializer.DEFAULT_SERIALIZER;
 
 
 /**
@@ -28,37 +23,26 @@ import java.net.InetSocketAddress;
  * @author sutian
  * @Date 2020/9/5
  */
-public class NettyServer implements RpcServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
-
-    private final String host;
-    private final int port;
-
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
+public class NettyServer extends AbstractRpcServer {
 
     private CommonSerializer serializer;
 
     public NettyServer(String host, int port) {
+        this(host, port, DEFAULT_SERIALIZER);
+    }
+
+    public NettyServer(String host, int port, Integer serializer) {
         this.serviceRegistry = new NacosServiceRegistry();
         this.serviceProvider = new ServiceProviderImpl();
         this.host = host;
         this.port = port;
-    }
-
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if (serializer == null) {
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service, serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        this.serializer = CommonSerializer.getByCode(serializer);
+        scanServices();
     }
 
     @Override
     public void start() {
+        ShutdownHook.getShutdownHook().addClearAllHook();   // 关闭服务器时自动注销服务的钩子函数
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {

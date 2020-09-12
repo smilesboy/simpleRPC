@@ -24,7 +24,9 @@ public enum RpcError {
     FAILED_TO_CONNECT_TO_SERVICE_REGISTRY("连接服务注册中心失败"),
     REGISTER_SERVICE_FAILED("注册服务失败"),
     CLIENT_CONNECT_SERVER_FAILURE("客户端连接服务器失败"),
-    RESPONSE_NOT_MATCH("回应包不匹配");
+    RESPONSE_NOT_MATCH("回应包不匹配"),
+    UNKNOWN_ERROR("未知的错误"),
+    SERVICE_SCAN_PACKAGE_NOT_FOUND("未发现服务扫描包");
 
     private final String message;
 
