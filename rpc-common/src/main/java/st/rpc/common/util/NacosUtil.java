@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 管理Nacos连接等工具类
@@ -22,6 +23,7 @@ public class NacosUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(NacosUtil.class);
 
+    private AtomicInteger a;
     private static final NamingService namingService;
     private static final Set<String> serviceNames = new HashSet<>();
     private static InetSocketAddress address;

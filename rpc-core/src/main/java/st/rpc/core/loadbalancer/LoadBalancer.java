@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface LoadBalancer {
 
-    Instance select(List<Instance> instances);
+    Instance select(String serviceName, List<Instance> instances);
 
 }
